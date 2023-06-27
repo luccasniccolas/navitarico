@@ -30,7 +30,77 @@ if(!isset($_SESSION['datosUsuario'])) {
 <?php 
 include("template/pie.php");
 } else {
-  
+  require_once('database.php');
+  $datosUsuario[] = $_SESSION['datosUsuario'];
+  $conn = new conexion;
+  $id = $_SESSION['datosUsuario'][0];
+  $countsql = "SELECT COUNT(*) AS total_plantas FROM plantas INNER JOIN usuario ON plantas.usuario_id = usuario.id WHERE usuario.id = '$id'";
+  $result = mysqli_query($conn->conectardb(), $countsql);
+  $total;
+  if ($result && $result->num_rows > 0) {
+    // Obtener el valor del conteo
+    $fila = $result->fetch_assoc();
+    $total = $fila['total_plantas'];
+}
+
+if($total == 0) {
+  ?>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/bootstrap.min.css" />
+  <style>
+    .crearPlanta {
+      display: flex;
+  justify-content: center;
+  align-items: center
+    }
+  </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row min-vh-100 flex-column flex-md-row">
+        <aside class="col-12 col-md-2 p-0 bg-primary flex-shrink-1">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary flex-md-column flex-row align-items-start py-2">
+                <div class="collapse navbar-collapse ">
+                    <ul class="flex-md-column flex-row navbar-nav w-100 justify-content-between">
+                        <li class="nav-item">
+                            <a class="nav-link pl-0 text-nowrap" href="#"><i class="fa fa-bullseye fa-fw"></i> <span class="font-weight-bold"><?php echo $_SESSION['datosUsuario'][1]; ?></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link pl-0" href="#"><i class="fa fa-book fa-fw"></i> <span class="d-none d-md-inline">Link</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link pl-0" href="#"><i class="fa fa-cog fa-fw"></i> <span class="d-none d-md-inline">Link</span></a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link pl-0" href="cerrar_sesion.php"><i class="fa fa-star codeply fa-fw"></i> <span class="d-none d-md-inline">Cerrar sesión</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+        <main class="col bg-faded py-3 flex-grow-1">
+            <h2>!!!WOW NO TIENES PLANTAS AGREGADAS!!! </h2>
+            <p>
+            No tienes plantas en tu colección en este momento. ¡Pero no te preocupes, puedes agregar una planta fácilmente! Agregar plantas a tu colección te cuidar disfrutar de estas desde que cualquier parte del mundo.
+¿Te gustaría comenzar tu colección de plantas? Simplemente presiona el botón de abajo para agregar tu primera planta.
+            </p> 
+            
+            <button type="button" class="btn btn-success crearPlanta">Agregar planta</button>
+
+
+        </main>
+    </div>
+</div>
+</body>
+</html>
+<?php 
+} else {
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -58,14 +128,14 @@ include("template/pie.php");
                         </li>
                         
                         <li class="nav-item">
-                            <a class="nav-link pl-0" href="cerrar_sesion.php"><i class="fa fa-star codeply fa-fw"></i> <span class="d-none d-md-inline">Cerrar sesion</span></a>
+                            <a class="nav-link pl-0" href="cerrar_sesion.php"><i class="fa fa-star codeply fa-fw"></i> <span class="d-none d-md-inline">Cerrar sesión</span></a>
                         </li>
                     </ul>
                 </div>
             </nav>
         </aside>
         <main class="col bg-faded py-3 flex-grow-1">
-            <h2>Example</h2>
+            <h2>si tienes plantas</h2>
             <p>
                 This is a Bootstrap 4 example layout that includes a Sidebar menu. On larger screen widths, the Sidebar is on the 
                 left side and consumes the entire page height. It's vertically positioned down the screen. On smaller screen widths (like mobile phones and tablets), the Sidebar
@@ -81,6 +151,14 @@ include("template/pie.php");
 </div>
 </body>
 </html>
-<?php } ?>
+<?php 
+}
+}
+?>
+
+ 
+
+
+
 
        
