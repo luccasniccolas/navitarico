@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting(0);
 if(!isset($_SESSION['datosUsuario'])) {
   include("template/cabecera.php"); 
 ?>
@@ -44,6 +45,19 @@ include("template/pie.php");
 }
 
 if($total == 0) {
+  if(isset($_POST['miBoton'])){
+    // Acciones que deseas realizar cuando se presiona el botón
+    $plantasql = "INSERT INTO plantas(usuario_id, temperatura, humedad_ambiente, humedad_suelo,agua_disponible, modo_automatico) VALUES($id, 20, 20, 20, 1, 1)";
+    $resultado = mysqli_query($conn->conectardb(), $plantasql);
+    if($result->num_rows > 0) {
+      header("location:index.php");
+      exit();
+  } else {
+      
+  $mensaje.="<h5 class='registrado'>Error</h5>";
+  }
+
+  }
   ?>
   <!DOCTYPE html>
 <html lang="en">
@@ -52,6 +66,7 @@ if($total == 0) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="./css/bootstrap.min.css" />
+  
   <style>
     .crearPlanta {
       display: flex;
@@ -87,13 +102,14 @@ if($total == 0) {
         <main class="col bg-faded py-3 flex-grow-1">
             <h2>!!!WOW NO TIENES PLANTAS AGREGADAS!!! </h2>
             <p>
-            No tienes plantas en tu colección en este momento. ¡Pero no te preocupes, puedes agregar una planta fácilmente! Agregar plantas a tu colección te cuidar disfrutar de estas desde que cualquier parte del mundo.
+            No tienes plantas en tu colección en este momento. ¡Pero no te preocupes, puedes agregar una planta fácilmente! Agregar plantas a tu colección te ayudara a cuidar tus plantas desde que cualquier parte del mundo.
 ¿Te gustaría comenzar tu colección de plantas? Simplemente presiona el botón de abajo para agregar tu primera planta.
             </p> 
-            
-            <button type="button" class="btn btn-success crearPlanta">Agregar planta</button>
-
-
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+            <input name="miBoton" value="Agregar planta" type="submit" class="btn btn-success crearPlanta">
+            </form>
+            <?php echo $mensaje; ?>
+        
         </main>
     </div>
 </div>
@@ -101,6 +117,21 @@ if($total == 0) {
 </html>
 <?php 
 } else {
+  $queryDatos = "SELECT temperatura, humedad_ambiente, humedad_suelo, agua_disponible, modo_automatico FROM plantas where usuario_id = '$id'";
+  $result = mysqli_query($conn->conectardb(), $queryDatos);
+
+  if($result->num_rows > 0) {
+    $datosPlanta = array();
+
+        // Recorrer los resultados de la consulta y guardar los datos en la variable
+        while ($row = mysqli_fetch_assoc($result)) {
+            $datosPlanta[] = $row['temperatura'];
+            $datosPlanta[] = $row['humedad_ambiente'];
+            $datosPlanta[] = $row['humedad_suelo'];
+            $datosPlanta[] = $row['agua_disponible'];
+            $datosPlanta[] = $row['modo_automatico'];
+        }
+} 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -109,6 +140,8 @@ if($total == 0) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="./css/bootstrap.min.css" />
+  
+  
 </head>
 <body>
 <div class="container-fluid">
@@ -135,20 +168,114 @@ if($total == 0) {
             </nav>
         </aside>
         <main class="col bg-faded py-3 flex-grow-1">
-            <h2>si tienes plantas</h2>
-            <p>
-                This is a Bootstrap 4 example layout that includes a Sidebar menu. On larger screen widths, the Sidebar is on the 
-                left side and consumes the entire page height. It's vertically positioned down the screen. On smaller screen widths (like mobile phones and tablets), the Sidebar
-                moves to the top of the page, and becomes horizontally positioned across the page like a Navbar. Only icons are shown
-                on mobile to limit use of screen real estate.
-            </p> 
-            <p>
-                This Sidebar works using only Bootstrap CSS classes and doesn't require JavaScript. It utilizes the responsive Navbar classes
-                to auto-magically switch the Sidebar orientation.
-            </p> 
+        <section class="row">
+                    <div class="col-12 col-lg-9">
+                        <div class="row">
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon purple">
+                                                    <i class="iconly-boldShow"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h6 class="text-muted font-semibold">Humedad tierra</h6>
+                                                <h6 class="font-extrabold mb-0" id="humedad"><?php echo $datosPlanta[2]; ?>%</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon blue">
+                                                    <i class="iconly-boldProfile"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h6 class="text-muted font-semibold">Humedad de ambiente</h6>
+                                                <h6 class="font-extrabold mb-0" id="ambiente"><?php echo $datosPlanta[1] ?>%</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon green">
+                                                    <i class="iconly-boldAdd-User"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h6 class="text-muted font-semibold">Temperatura</h6>
+                                                <h6 class="font-extrabold mb-0" id="temperatura"><?php echo $datosPlanta[0] ?>°C</h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon red">
+                                                    <i class="iconly-boldBookmark"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                                <h6 class="text-muted font-semibold">Agua en tanque:</h6>
+                                                <h6 class="font-extrabold mb-0" id="agua"><?php 
+                                                if($datosPlanta[3] == 1) {
+                                                  echo "Todavia tiene agua";
+                                                } else {
+                                                  echo "Rellenar estanque";
+                                                }
+                                                ?></h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-lg-3 col-md-6">
+                                <div class="card">
+                                    <div class="card-body px-3 py-4-5">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="stats-icon red">
+                                                    <i class="iconly-boldBookmark"></i>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-8">
+                                              <h6>Modo automatico</h6>
+                                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+            <input name="miBoton" value="Agregar planta" type="submit" class="btn btn-success crearPlanta">
+            </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                                        
+                                          
         </main>
     </div>
 </div>
+<script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+
+    <script src="assets/vendors/apexcharts/apexcharts.js"></script>
+    <script src="assets/js/pages/dashboard.js"></script>
+
+    <script src="assets/js/main.js"></script>
 </body>
 </html>
 <?php 
