@@ -1,9 +1,13 @@
-<?php include("template/cabecera.php"); ?>
+<?php
+session_start();
+if(!isset($_SESSION['datosUsuario'])) {
+  include("template/cabecera.php"); 
+?>
+
 <div class="p-5 mb-4 bg-body-tertiary rounded-3">
       <div class="container-fluid py-5">
         <h1 class="display-5 fw-bold">Plantitas UDP</h1>
-        <p class="col-md-8 fs-4">¡Bienvenido/a a plantitas UDP! Somos expertos en el cuidado de plantas a través de sensores implementados en NodeMCU. Con nuestra tecnología, podrás monitorear y cuidar tus plantas desde cualquier lugar. Nuestro sitio web ofrece una variedad de sensores de alta calidad y fácil instalación. Únete a nuestra comunidad y convierte tu hogar en un oasis verde. ¡Cuida tus plantas, cuida de ti mismo/a y cuida del planeta!</p>
-        <button class="btn btn-primary btn-lg" type="button">Example button</button>
+        <p class="col-md-8 fs-4">¡Bienvenido/a a plantitas UDP! Somos expertos en el cuidado de plantas a través de sensores implementados en NodeMCU. Con nuestra tecnología, podrás monitorear y cuidar tus plantas desde cualquier lugar. Nuestro sitio web te permitira monitorear a tu planta desde cualquier lugar del mundo. Únete a nuestra comunidad y convierte tu hogar en un oasis verde. ¡Cuida tus plantas, cuida de ti mismo/a y cuida del planeta!</p>
       </div>
     </div>
     <div class="row align-items-md-stretch">
@@ -23,5 +27,60 @@
       </div>
     </div>
 
-  <?php include("template/pie.php"); ?>
+<?php 
+include("template/pie.php");
+} else {
+  
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/bootstrap.min.css" />
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row min-vh-100 flex-column flex-md-row">
+        <aside class="col-12 col-md-2 p-0 bg-primary flex-shrink-1">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-primary flex-md-column flex-row align-items-start py-2">
+                <div class="collapse navbar-collapse ">
+                    <ul class="flex-md-column flex-row navbar-nav w-100 justify-content-between">
+                        <li class="nav-item">
+                            <a class="nav-link pl-0 text-nowrap" href="#"><i class="fa fa-bullseye fa-fw"></i> <span class="font-weight-bold"><?php echo $_SESSION['datosUsuario'][1]; ?></span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link pl-0" href="#"><i class="fa fa-book fa-fw"></i> <span class="d-none d-md-inline">Link</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link pl-0" href="#"><i class="fa fa-cog fa-fw"></i> <span class="d-none d-md-inline">Link</span></a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link pl-0" href="cerrar_sesion.php"><i class="fa fa-star codeply fa-fw"></i> <span class="d-none d-md-inline">Cerrar sesion</span></a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+        <main class="col bg-faded py-3 flex-grow-1">
+            <h2>Example</h2>
+            <p>
+                This is a Bootstrap 4 example layout that includes a Sidebar menu. On larger screen widths, the Sidebar is on the 
+                left side and consumes the entire page height. It's vertically positioned down the screen. On smaller screen widths (like mobile phones and tablets), the Sidebar
+                moves to the top of the page, and becomes horizontally positioned across the page like a Navbar. Only icons are shown
+                on mobile to limit use of screen real estate.
+            </p> 
+            <p>
+                This Sidebar works using only Bootstrap CSS classes and doesn't require JavaScript. It utilizes the responsive Navbar classes
+                to auto-magically switch the Sidebar orientation.
+            </p> 
+        </main>
+    </div>
+</div>
+</body>
+</html>
+<?php } ?>
+
        

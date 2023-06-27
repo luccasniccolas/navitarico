@@ -110,7 +110,7 @@ $mensaje.="<h5 class='registrado'>Felicitaciones, se ha registrado de forma exit
         <input type="password" id="password" name="password" required>
       </div>
       <div class="form-group">
-        <input type="submit" name="registrar" value="registrar">
+        <input type="submit" name="registrar" value="registrarse">
       </div>
     </form>
   </div>
