@@ -117,6 +117,28 @@ if($total == 0) {
 </html>
 <?php 
 } else {
+  if(isset($_POST['automatico'])){
+  $cambiarModo ="UPDATE plantas SET modo_automatico = 1 where id < 100"; 
+  $result = mysqli_query($conn->conectardb(), $cambiarModo);
+  header("location:index.php");
+  exit();
+
+  }
+  if(isset($_POST['manual'])){
+    $cambiarModo ="UPDATE plantas SET modo_automatico = 0 where id < 100"; 
+    $result = mysqli_query($conn->conectardb(), $cambiarModo);
+    header("location:index.php");
+    exit();
+  
+    }
+    if(isset($_POST['regar'])){
+      $regar = "UPDATE plantas SET regar = 1 where id < 100"; 
+      $result = mysqli_query($conn->conectardb(), $regar);
+      header("location:index.php");
+      exit();
+      }
+  
+
   $queryDatos = "SELECT temperatura, humedad_ambiente, humedad_suelo, agua_disponible, modo_automatico FROM plantas where usuario_id = '$id'";
   $result = mysqli_query($conn->conectardb(), $queryDatos);
 
@@ -141,7 +163,7 @@ if($total == 0) {
   <title>Document</title>
   <link rel="stylesheet" href="./css/bootstrap.min.css" />
   <link rel="stylesheet" href="./css/app.css">
-  <link rel="stylesheet" href="./css/bootstrap.css">
+  
   
   
 </head>
@@ -257,10 +279,22 @@ if($total == 0) {
                                                 </div>
                                             </div>
                                             <div class="col-md-8">
-                                              <h6>Modo automatico</h6>
-                                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-            <input name="miBoton" value="Agregar planta" type="submit" class="btn btn-success crearPlanta">
+                                              <?php if($datosPlanta[4] == 0) { ?>
+                                                <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+            <input name="automatico" value="modo automatico" type="submit" class="btn btn-success crearPlanta">
             </form>
+            <?php } else {
+              ?>
+              <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+            <input name="manual" value="modo manual" type="submit" class="btn btn-success crearPlanta">
+            </form>
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+            <input name="regar" value="regar" type="submit" class="btn btn-success crearPlanta">
+            </form>
+
+            <?php } ?>
+
+            
                                             </div>
                                         </div>
                                     </div>
